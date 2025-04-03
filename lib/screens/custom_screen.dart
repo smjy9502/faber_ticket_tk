@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:faber_ticket_tk/services/firebase_service.dart';
 import 'package:faber_ticket_tk/screens/main_screen.dart';
@@ -26,13 +27,15 @@ class _CustomScreenState extends State<CustomScreen> {
         'row': rowController.text,
         'seat': seatController.text,
       };
-      await _firebaseService.saveCustomData(data);
+      final db = FirebaseFirestore.instance;
+      await db.collection('reviews').add(data); // 기존과 동일한 컬렉션에 저장
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data saved successfully!')));
     } catch (e) {
       print('Error saving data: $e');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error saving data: $e')));
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
