@@ -4,6 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "target": "faber-ticket-tk",
     "public": "build/web",
     "ignore": [
       "firebase.json",
@@ -19,6 +20,5 @@
   },
   "storage": {
     "rules": "storage.rules"
-  },
-  "site": "faber-ticket-tk"
+  }
 }
