@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "faber-ticket-ft",
+    "faber-ticket-tk": "faber-ticket-ft"
+  },
+  "targets": {},
+  "etags": {}
+}
