@@ -3,6 +3,14 @@
     "default": "faber-ticket-ft",
     "faber-ticket-tk": "faber-ticket-ft"
   },
-  "targets": {},
+  "targets": {
+    "faber-ticket-ft": {
+      "hosting": {
+        "faber-ticket-tk": [
+          "faber-ticket-ft"
+        ]
+      }
+    }
+  },
   "etags": {}
 }
