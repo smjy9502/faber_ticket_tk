@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:faber_ticket_tk/services/firebase_service.dart';
 import 'package:faber_ticket_tk/screens/main_screen.dart';
@@ -27,8 +28,15 @@ class _CustomScreenState extends State<CustomScreen> {
         'row': rowController.text,
         'seat': seatController.text,
       };
+      // backup.
+      // final db = FirebaseFirestore.instance;
+      // await db.collection('reviews').add(data); // 기존과 동일한 컬렉션에 저장
+
       final db = FirebaseFirestore.instance;
-      await db.collection('reviews').add(data); // 기존과 동일한 컬렉션에 저장
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+
+      await db.collection('users').doc(userId).collection('reviews').add(data);
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data saved successfully!')));
     } catch (e) {
       print('Error saving data: $e');
