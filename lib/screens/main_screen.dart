@@ -28,12 +28,15 @@ class _MainScreenState extends State<MainScreen> {
       if (mainBackground != null) {
         final ref = FirebaseStorage.instance.ref("images/$mainBackground");
         final url = await ref.getDownloadURL();
+        print("✅ 이미지 URL: $url"); // 성공 로그
         setState(() => _mainBackground = NetworkImage(url));
       }
     } catch (e) {
-      print("이미지 로드 실패: $e");
+      print("❌ 이미지 로드 실패: $e"); // 실패 로그
+      setState(() => _mainBackground = AssetImage(Constants.ticketFrontImage));
     }
   }
+
 
 
   @override
