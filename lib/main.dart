@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:faber_ticket_tk/screens/main_screen.dart';
@@ -8,9 +9,8 @@ import 'dart:html' as html;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
+  await FirebaseAuth.instance.signInAnonymously(); // 익명 로그인 추가
   runApp(MyApp());
 }
 

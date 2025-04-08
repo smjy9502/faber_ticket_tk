@@ -21,28 +21,26 @@ class _CustomScreenState extends State<CustomScreen> {
 
   Future<void> saveData() async {
     try {
-      Map<String, dynamic> data = {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception('User not logged in');
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('reviews')
+          .add({
         'rating': _rating,
         'review': reviewController.text,
         'section': sectionController.text,
         'row': rowController.text,
         'seat': seatController.text,
-      };
-      // backup.
-      // final db = FirebaseFirestore.instance;
-      // await db.collection('reviews').add(data); // 기존과 동일한 컬렉션에 저장
-
-      final db = FirebaseFirestore.instance;
-      final userId = FirebaseAuth.instance.currentUser?.uid;
-
-      await db.collection('users').doc(userId).collection('reviews').add(data);
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Data saved successfully!')));
+        'timestamp': FieldValue.serverTimestamp()
+      });
     } catch (e) {
-      print('Error saving data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error saving data: $e')));
+      print('Error: $e');
     }
   }
+
 
 
   @override

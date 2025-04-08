@@ -22,15 +22,13 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _loadMainBackground() async {
-    final urlParams = Uri.parse(Uri.base.toString()).queryParameters;
-    final mainBackground = urlParams['CM'];
+    final urlParams = Uri.base.queryParameters; // 수정된 부분
+    final mainBackground = urlParams['cm']; // 대소문자 주의
 
     if (mainBackground != null) {
       final ref = FirebaseStorage.instance.ref().child("images/$mainBackground");
       final url = await ref.getDownloadURL();
-      setState(() {
-        _mainBackground = url;
-      });
+      setState(() => _mainBackground = NetworkImage(url));
     }
   }
 
