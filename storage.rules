@@ -1,11 +1,13 @@
 rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /images/{userId}/{allPaths=**} {
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 모든 사용자 문서 및 하위 컬렉션 허용
+    match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
+
 
 //rules_version = '2';
 //service firebase.storage {

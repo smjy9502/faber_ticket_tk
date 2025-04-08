@@ -22,15 +22,19 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _loadMainBackground() async {
-    final urlParams = Uri.base.queryParameters; // 수정된 부분
-    final mainBackground = urlParams['cm']; // 대소문자 주의
-
-    if (mainBackground != null) {
-      final ref = FirebaseStorage.instance.ref().child("images/$mainBackground");
-      final url = await ref.getDownloadURL();
-      setState(() => _mainBackground = NetworkImage(url));
+    try {
+      final urlParams = Uri.base.queryParameters;
+      final mainBackground = urlParams['cm'];
+      if (mainBackground != null) {
+        final ref = FirebaseStorage.instance.ref("images/$mainBackground");
+        final url = await ref.getDownloadURL();
+        setState(() => _mainBackground = NetworkImage(url));
+      }
+    } catch (e) {
+      print("이미지 로드 실패: $e");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
