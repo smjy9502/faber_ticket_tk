@@ -42,16 +42,16 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(
+      body: _mainBackground == null
+          ? Center(child: CircularProgressIndicator()) // 로딩 중 표시
+          : LayoutBuilder(
         builder: (context, constraints) {
           return Container(
             width: constraints.maxWidth,
             height: constraints.maxHeight,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: _mainBackground != null
-                    ? _mainBackground as ImageProvider<Object>
-                    : AssetImage(Constants.ticketFrontImage) as ImageProvider<Object>,
+                image: (_mainBackground ?? AssetImage(Constants.ticketFrontImage)) as ImageProvider,
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
