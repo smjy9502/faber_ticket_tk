@@ -7,10 +7,14 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:html' as html;
 
+// main.dart 수정
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await Firebase.initializeApp();
+    // FirebaseOptions 명시적 전달
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     await FirebaseAuth.instance.signInAnonymously();
     runApp(MyApp());
   } catch (e) {
@@ -18,6 +22,7 @@ void main() async {
     runApp(MaterialApp(home: ErrorScreen()));
   }
 }
+
 
 
 class MyApp extends StatelessWidget {
@@ -48,12 +53,13 @@ class MyApp extends StatelessWidget {
 
 Future<bool> checkInitialAccess() async {
   if (foundation.kIsWeb) {
-    final userAgent = html.window.navigator.userAgent.toLowerCase();
-    print('User Agent: $userAgent'); // User Agent 출력
+    final userAgent = html.window.navigator.userAgent?.toLowerCase() ?? '';
+    print('User Agent: $userAgent');
     final isMobile = userAgent.contains('mobile') ||
-                    userAgent.contains('android') ||
-                     userAgent.contains('iPhone');
+        userAgent.contains('android') ||
+        userAgent.contains('iphone');
     return isMobile;
   }
   return true;
 }
+
