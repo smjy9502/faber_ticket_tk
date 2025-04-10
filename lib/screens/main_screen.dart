@@ -52,8 +52,8 @@ class _MainScreenState extends State<MainScreen> {
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            // image: _mainBackground!,
-            image: _mainBackground ?? AssetImage(Constants.ticketFrontImage),
+            image: _mainBackground!,
+            // image: _mainBackground ?? AssetImage(Constants.ticketFrontImage),
             fit: BoxFit.cover,
           ),
         ),
