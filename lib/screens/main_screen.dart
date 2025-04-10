@@ -13,7 +13,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Object? _mainBackground;
+  ImageProvider? _mainBackground;
 
   @override
   void initState() {
@@ -25,14 +25,17 @@ class _MainScreenState extends State<MainScreen> {
     try {
       final urlParams = Uri.base.queryParameters;
       final mainBackground = urlParams['cm'];
+
       if (mainBackground != null) {
         final ref = FirebaseStorage.instance.ref("images/$mainBackground");
         final url = await ref.getDownloadURL();
-        print("✅ 이미지 URL: $url"); // 성공 로그
+        print("이미지 URL: $url"); // 성공 로그
         setState(() => _mainBackground = NetworkImage(url));
+      } else {
+        throw Exception('Custom Image 파라미터 없음');
       }
     } catch (e) {
-      print("❌ 이미지 로드 실패: $e"); // 실패 로그
+      print("이미지 로드 실패: $e"); // 실패 로그
       setState(() => _mainBackground = AssetImage(Constants.ticketFrontImage));
     }
   }
@@ -43,42 +46,31 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _mainBackground == null
-          ? Center(child: CircularProgressIndicator()) // 로딩 중 표시
-          : LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: (_mainBackground ?? AssetImage(Constants.ticketFrontImage)) as ImageProvider,
-                fit: BoxFit.cover,
-                alignment: Alignment.center,
+          ? Center(child: CircularProgressIndicator())
+          : Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            // image: _mainBackground!,
+            image: _mainBackground ?? AssetImage(Constants.ticketFrontImage),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CustomScreen()),
+                ),
+                child: Text('Enter'),
               ),
-            ),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(60, 25),
-                      backgroundColor: Colors.grey,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CustomScreen()),
-                      );
-                    },
-                    child: Text('Enter'),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
       ),
     );
   }
