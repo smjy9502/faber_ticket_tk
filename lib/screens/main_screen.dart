@@ -58,17 +58,14 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
+          child: Center(
+            child: ElevatedButton(
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CustomScreen()),
                 ),
                 child: Text('Enter'),
               ),
-            ],
           ),
         ),
       ),
