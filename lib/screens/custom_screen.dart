@@ -73,17 +73,40 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Save 버튼 (화면 우측 상단)
               Positioned(
-                top: 21, // 화면 최상단에 위치하도록 조정
+                top: 20, // 화면 최상단에 위치하도록 조정
                 right: 29,
-                child: ElevatedButton(
+                child: FloatingActionButton(
                   onPressed: saveData,
-                  child: Text('Save'),
+                  backgroundColor: Colors.deepPurpleAccent,
+                  foregroundColor: Colors.white,
+                  elevation: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        )
+                      ],
+                    ),
+                    child: Icon(Icons.save_rounded, size: 28),
+                  ),
                 ),
               ),
               // Rate (평점 기능)
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.68, // 이미지 위치를 아래로 이동
-                left: MediaQuery.of(context).size.width * 0.5 - 125, // 이미지 위치 조정
+                top: MediaQuery.of(context).size.height * 0.68, // 이미지 위치를 아래로 이동(숫자 크게하면 아래로)
+                left: MediaQuery.of(context).size.width * 0.5 - 100, // 이미지 위치 조정(- 뒤 숫자 줄이면 우측으로)
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 이미지 간격 조정
                   children: List.generate(5, (index) {
@@ -101,8 +124,8 @@ class _CustomScreenState extends State<CustomScreen> {
                       },
                       child: Image.asset(
                         index < _rating ? Constants.petalFullImage : Constants.petalEmptyImage,
-                        width: 45, // 이미지 크기 조정
-                        height: 45,
+                        width: 40, // 이미지 크기 조정
+                        height: 40,
                       ),
                     );
                   }).map((child) => [child, SizedBox(width: 10)]).expand((pair) => pair).toList(),
@@ -110,8 +133,8 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Review 입력
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.815, // 이미지 상의 "Review" 위치
-                left: MediaQuery.of(context).size.width * 0.5 - 200,
+                top: MediaQuery.of(context).size.height * 0.76, // 이미지 상의 "Review" 위치
+                left: MediaQuery.of(context).size.width * 0.5 - 100,
                 child: SizedBox(
                   width: 300,
                   child: TextField(
@@ -127,16 +150,16 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Section, Row, Seat 입력
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.917, // 이미지 상의 "Section", "Row", "Seat" 위치
-                left: MediaQuery.of(context).size.width * 0.12,
-                right: MediaQuery.of(context).size.width * 0.12,
+                top: MediaQuery.of(context).size.height * 0.93, // 이미지 상의 "Section", "Row", "Seat" 위치
+                left: MediaQuery.of(context).size.width * 0.1,
+                right: MediaQuery.of(context).size.width * 0.1,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 4.9),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.16,
                         child: TextField(
                           textAlign: TextAlign.center, // 텍스트 중간 정렬
                           controller: sectionController,
@@ -151,7 +174,7 @@ class _CustomScreenState extends State<CustomScreen> {
                     ),
                     // SizedBox(width: 20,),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.15,
+                      width: MediaQuery.of(context).size.width * 0.16,
                       child: TextField(
                         textAlign: TextAlign.center, // 텍스트 중간 정렬
                         controller: rowController,
@@ -167,7 +190,7 @@ class _CustomScreenState extends State<CustomScreen> {
                     Padding(
                       padding: EdgeInsets.only(right: 4.9),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.16,
                         child: TextField(
                           textAlign: TextAlign.center, // 텍스트 중간 정렬
                           controller: seatController,

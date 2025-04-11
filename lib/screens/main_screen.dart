@@ -60,12 +60,44 @@ class _MainScreenState extends State<MainScreen> {
         child: SafeArea(
           child: Center(
             child: ElevatedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CustomScreen()),
-                ),
-                child: Text('Enter'),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CustomScreen()),
               ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(120, 50),
+                padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                elevation: 8,
+                shadowColor: Colors.blue.withOpacity(0.3),
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.white,
+              ).copyWith(
+                overlayColor: MaterialStateProperty.resolveWith<Color>(
+                      (states) => Colors.blue.withOpacity(0.1),
+                ),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  gradient: LinearGradient(
+                    colors: [Colors.blueAccent, Colors.blueGrey],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Text(
+                  'START',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 4.3,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
