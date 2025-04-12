@@ -89,7 +89,7 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 child: Text(
-                  'START',
+                  'open',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,

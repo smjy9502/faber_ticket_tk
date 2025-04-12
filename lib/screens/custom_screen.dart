@@ -73,7 +73,7 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Save 버튼 (화면 우측 상단)
               Positioned(
-                top: 19, // 화면 최상단에 위치하도록 조정
+                top: 17, // 화면 최상단에 위치하도록 조정
                 right: 29,
                 child: FloatingActionButton(
                   onPressed: saveData,
@@ -84,8 +84,8 @@ class _CustomScreenState extends State<CustomScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Container(
-                    width: 35,
-                    height: 35,
+                    width: 30,
+                    height: 30,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -105,7 +105,7 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Rate (평점 기능)
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.7, // 이미지 위치를 아래로 이동(숫자 크게하면 아래로)
+                top: MediaQuery.of(context).size.height * 0.6, // 이미지 위치를 아래로 이동(숫자 크게하면 아래로)
                 left: MediaQuery.of(context).size.width * 0.5 - 90, // 이미지 위치 조정(- 뒤 숫자 줄이면 우측으로)
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 이미지 간격 조정
@@ -133,8 +133,8 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Review 입력
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.8, // 이미지 상의 "Review" 위치
-                left: MediaQuery.of(context).size.width * 0.5 - 50,
+                top: MediaQuery.of(context).size.height * 0.71, // 이미지 상의 "Review" 위치
+                left: MediaQuery.of(context).size.width * 0.5 - 90,
                 child: SizedBox(
                   width: 300,
                   child: TextField(
@@ -150,7 +150,7 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Section, Row, Seat 입력
               Positioned(
-                top: MediaQuery.of(context).size.height * 1.0, // 이미지 상의 "Section", "Row", "Seat" 위치
+                top: MediaQuery.of(context).size.height * 0.82, // 이미지 상의 "Section", "Row", "Seat" 위치
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
                 child: Row(
