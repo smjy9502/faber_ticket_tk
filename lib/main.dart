@@ -57,8 +57,9 @@ Future<bool> checkInitialAccess() async {
     print('User Agent: $userAgent');
     final isMobile = userAgent.contains('mobile') ||
         userAgent.contains('android') ||
-        userAgent.contains('iphone') ||
-        userAgent.contains('macintosh');
+        userAgent.contains('iphone')
+        // || userAgent.contains('macintosh')
+    ;
     return isMobile;
   }
   return true;
