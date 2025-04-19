@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:faber_ticket_tk/services/firebase_service.dart';
 import 'package:faber_ticket_tk/screens/main_screen.dart';
@@ -12,6 +13,33 @@ class CustomScreen extends StatefulWidget {
 
 class _CustomScreenState extends State<CustomScreen> {
   final FirebaseService _firebaseService = FirebaseService();
+  ImageProvider? _ticketBackground;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBackgroundImage();
+  }
+
+  Future<void> _loadBackgroundImage() async {
+    try {
+      final urlParams = Uri.base.queryParameters;
+      final ticketBackground = urlParams['ct'];
+
+      if (ticketBackground != null) {
+        final ref = FirebaseStorage.instance.ref("images/$ticketBackground");
+        final url = await ref.getDownloadURL();
+        setState(() => _ticketBackground = NetworkImage(url));
+      } else {
+        throw Exception('Custom Image 파라미터 없음');
+      }
+    } catch (e) {
+      print("배경 이미지 로드 실패: $e");
+      setState(() => _ticketBackground = AssetImage(Constants.ticketBackImage));
+    }
+  }
+
+
 
   int _rating = 0; // 평점
   final TextEditingController reviewController = TextEditingController();
@@ -49,7 +77,7 @@ class _CustomScreenState extends State<CustomScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(Constants.ticketBackImage),
+            image: _ticketBackground!,
             fit: BoxFit.cover,
             alignment: Alignment.topCenter, // 배경 이미지를 화면 상단에 맞춤
           ),
@@ -73,34 +101,15 @@ class _CustomScreenState extends State<CustomScreen> {
               ),
               // Save 버튼 (화면 우측 상단)
               Positioned(
-                top: 17, // 화면 최상단에 위치하도록 조정
-                right: 29,
+                top: 11, // 10>11
+                right: 10,
                 child: FloatingActionButton(
                   onPressed: saveData,
-                  backgroundColor: Colors.deepPurpleAccent,
+                  backgroundColor: Colors.deepPurple[110],
                   foregroundColor: Colors.white,
                   elevation: 6,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        )
-                      ],
-                    ),
-                    child: Icon(Icons.save_rounded, size: 28),
-                  ),
+                  mini: true,
+                  child: Icon(Icons.save_rounded),
                 ),
               ),
               // Rate (평점 기능)
