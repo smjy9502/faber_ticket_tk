@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:faber_ticket_tk/services/firebase_service.dart';
 import 'package:faber_ticket_tk/screens/main_screen.dart';
 import 'package:faber_ticket_tk/utils/constants.dart';
+import 'dart:html' as html; // For url cleansing
+
 
 class CustomScreen extends StatefulWidget {
   @override
@@ -18,13 +20,25 @@ class _CustomScreenState extends State<CustomScreen> {
   @override
   void initState() {
     super.initState();
-    _loadBackgroundImage();
+    _loadBackgroundImage().then((_){
+      // 매개변수 읽은 후 URL에서 제거
+      html.window.history.replaceState({}, '', '/custom');
+    });
+    _loadSavedData();
   }
 
   Future<void> _loadBackgroundImage() async {
     try {
-      final urlParams = Uri.base.queryParameters;
+      // final urlParams = Uri.base.queryParameters;
+      // final ticketBackground = urlParams['ct'];
+      // sessionStorage에서 매개변수 읽기
+      final storedParams = html.window.sessionStorage['params'];
+      final urlParams = storedParams != null
+          ? Uri(query: storedParams).queryParameters
+          : Uri.base.queryParameters;
+
       final ticketBackground = urlParams['ct'];
+      //이 위까지 수정
 
       if (ticketBackground != null) {
         final ref = FirebaseStorage.instance.ref("images/$ticketBackground");
@@ -36,6 +50,32 @@ class _CustomScreenState extends State<CustomScreen> {
     } catch (e) {
       print("배경 이미지 로드 실패: $e");
       setState(() => _ticketBackground = AssetImage(Constants.ticketBackImage));
+    }
+  }
+
+  Future<void> _loadSavedData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('reviews')
+          .doc('current') // ✅ 고정 문서 ID 사용
+          .get();
+
+      if (doc.exists) {
+        setState(() {
+          _rating = doc.data()!['rating'] ?? 0;
+          reviewController.text = doc.data()!['review'] ?? '';
+          sectionController.text = doc.data()!['section'] ?? '';
+          rowController.text = doc.data()!['row'] ?? '';
+          seatController.text = doc.data()!['seat'] ?? '';
+        });
+      }
+    } catch (e) {
+      print('데이터 불러오기 오류: $e');
     }
   }
 
@@ -52,20 +92,32 @@ class _CustomScreenState extends State<CustomScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception('User not logged in');
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('reviews')
-          .add({
+      // 기존 데이터와 비교
+      final currentData = {
         'rating': _rating,
         'review': reviewController.text,
         'section': sectionController.text,
         'row': rowController.text,
         'seat': seatController.text,
-        'timestamp': FieldValue.serverTimestamp()
-      });
+      };
+      final prevDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('reviews')
+          .doc('current')
+          .get();
+
+      // 데이터 변경 시에만 저장
+      if (!prevDoc.exists || prevDoc.data()!.toString() != currentData.toString()) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('reviews')
+            .doc('current') // ✅ 동일 문서 수정
+            .set(currentData, SetOptions(merge: true));
+      }
     } catch (e) {
-      print('Error: $e');
+      print('저장 오류: $e');
     }
   }
 
@@ -105,7 +157,7 @@ class _CustomScreenState extends State<CustomScreen> {
                 right: 10,
                 child: FloatingActionButton(
                   onPressed: saveData,
-                  backgroundColor: Colors.deepPurple[110],
+                  backgroundColor: Colors.purple.shade100,
                   foregroundColor: Colors.white,
                   elevation: 6,
                   mini: true,
@@ -148,6 +200,7 @@ class _CustomScreenState extends State<CustomScreen> {
                   width: 300,
                   child: TextField(
                     controller: reviewController,
+                    maxLines: 1,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "Write your review",
